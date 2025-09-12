@@ -1,22 +1,16 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
 
-from .core.database import Base, engine
-from .middlewares.auth import AuthMiddleware
-from .routers import auth, user
+from .core.db_init import Base, engine
+from .middlewares.auth_middleware import AuthMiddleware
+from .routers import auth_router, user_router
 
 app = FastAPI()
 
-# migrate if not exist
-Base.metadata.create_all(bind=engine)
-
 # middleware
-exclude = [
-    "/auth/login",
-    "/auth/register"
-]
+exclude = ["/auth/login", "/auth/register"]
 app.add_middleware(AuthMiddleware, excluded_paths=exclude)
 
 # router
-app.include_router(auth.router, prefix="/auth", tags=["Auth"])
-app.include_router(user.router, prefix="/user", tags=["User"])
+app.include_router(auth_router.router, prefix="/auth", tags=["Auth"])
+app.include_router(user_router.router, prefix="/user", tags=["User"])

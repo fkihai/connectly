@@ -1,4 +1,4 @@
-from app.core.database import SessionLocal
+from app.core.db_init import SessionLocal
 
 
 def get_db():
@@ -7,4 +7,3 @@ def get_db():
         yield db
     finally:
         db.close()
-    
