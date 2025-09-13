@@ -8,7 +8,7 @@ from .routers import auth_router, user_router
 app = FastAPI()
 
 # middleware
-exclude = ["/auth/login", "/auth/register"]
+exclude = ["/auth/login"]
 app.add_middleware(AuthMiddleware, excluded_paths=exclude)
 
 # router

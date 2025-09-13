@@ -1,10 +1,10 @@
 import enum
 
-from sqlalchemy import Column, Integer, String, DateTime, func, Enum
+from sqlalchemy import Column, DateTime, Enum, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from app.core.enum import UserRole
 from app.core.db_init import Base
+from app.core.enum import UserRole
 
 
 class UserModel(Base):

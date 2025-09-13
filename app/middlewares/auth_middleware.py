@@ -32,6 +32,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
             username = payload.get("sub")
             if username is None:
                 raise HTTPException(status_code=401, detail="Invalid token payload")
+
+            # for global state
             request.state.username = username
 
         except HTTPException as e:
