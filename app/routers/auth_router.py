@@ -8,26 +8,19 @@ from app.schemas.user_schema import UserCreate, UserResponse
 from app.services.auth_service import (
     authenticate_user,
     create_access_token,
-    get_password_hash,
+    create_user,
+    verify_user_already_exists,
+    login_for_access_token,
 )
 
 router = APIRouter()
 
 
 @router.post("/login")
-def login_for_access_token(
+def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
-    user = authenticate_user(db, form_data.username, form_data.password)
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    access_token = create_access_token(data={"sub": user.username})
+    access_token, user = login_for_access_token(db, form_data)
     user_data = UserResponse.model_validate(user)
 
     return {
@@ -37,29 +30,8 @@ def login_for_access_token(
     }
 
 
-@router.post("/logout")
-def logout():
-    pass
-
-
 @router.post("/register")
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    # Check if the username already exists
-    existing_user = (
-        db.query(UserModel).filter(UserModel.username == user.username).first()
-    )
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already exists",
-        )
-
-    password = get_password_hash(user.password)
-    # Create a new user object
-    new_user = UserModel(username=user.username, email=user.email, password=password)
-    # Add the new user to the database
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    verify_user_already_exists(db, user)
+    new_user = create_user(db, user)
     return {"message": "User created successfully", "user_id": new_user.id}
