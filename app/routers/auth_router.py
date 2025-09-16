@@ -7,7 +7,7 @@ from app.dependencies.db_dependency import get_db
 from app.dependencies.user_dependency import role_required
 from app.models.user_model import UserModel
 from app.schemas.user_schema import UserCreate, UserResponse
-from app.services.auth_service import (
+from app.services.auth_services import (
     authenticate_user,
     create_access_token,
     create_user,

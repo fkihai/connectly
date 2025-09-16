@@ -5,7 +5,7 @@ from app.dependencies.db_dependency import get_db
 from app.dependencies.user_dependency import get_current_user
 from app.models.user_model import UserModel
 from app.schemas.user_schema import UserResponse
-from app.services.user_service import get_user_by_username
+from app.services.user_services import get_user_by_username
 
 router = APIRouter()
 

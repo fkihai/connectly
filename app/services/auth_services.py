@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.user_model import UserModel
 from app.schemas.user_schema import UserCreate
-from app.services.user_service import get_user_by_username
+from app.services.user_services import get_user_by_username
 
 # password hashing configuration
 pwd_context = CryptContext(schemes=["bcrypt"])
@@ -83,6 +83,7 @@ def verify_user_already_exists(db: Session, user_data: UserCreate):
     existing_user = (
         db.query(UserModel).filter(UserModel.username == user_data.username).first()
     )
+
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -91,14 +92,8 @@ def verify_user_already_exists(db: Session, user_data: UserCreate):
 
 
 def create_user(db: Session, user_data: UserCreate) -> UserModel:
-    password = get_password_hash(user_data.password)
-
-    new_user = UserModel(
-        username=user_data.username,
-        email=user_data.email,
-        password=password,
-        role=user_data.role,
-    )
+    new_user = UserModel(**user_data.model_dump(exclude={"password"}))
+    new_user.password = get_password_hash(user_data.password)
 
     # Add the new user to the database
     db.add(new_user)

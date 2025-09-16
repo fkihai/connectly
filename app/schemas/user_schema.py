@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from app.core.enum import UserRole
+from app.schemas.device_schema import DeviceResponse
 
 
 class UserBase(BaseModel):
@@ -21,3 +22,7 @@ class UserResponse(UserBase):
 
     class Config:
         from_attributes = True
+
+
+class UserWithDeviceResponse(UserResponse):
+    devices: List[DeviceResponse]

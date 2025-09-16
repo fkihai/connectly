@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.services.auth_service import verify_token
+from app.services.auth_services import verify_token
 
 
 class AuthMiddleware(BaseHTTPMiddleware):

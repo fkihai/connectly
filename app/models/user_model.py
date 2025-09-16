@@ -23,3 +23,6 @@ class UserModel(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    # relationship
+    devices = relationship("DeviceModel", back_populates="user")
