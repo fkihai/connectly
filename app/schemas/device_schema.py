@@ -1,3 +1,6 @@
+from typing import Optional
+from uuid import UUID
+
 from pydantic import BaseModel
 
 from app.core.enum import DeviceType
@@ -9,9 +12,14 @@ class DeviceBase(BaseModel):
     type: DeviceType
 
 
+class DeviceUpdate(BaseModel):
+    name: Optional[str] = None
+    type: Optional[str] = None
+
+
 class DeviceResponse(DeviceBase):
-    id: str
+    id: UUID
     is_online: bool
 
-    class config:
-        from_attributes: True
+    class Config:
+        from_attributes = True

@@ -7,7 +7,7 @@ from app.models.user_model import UserModel
 from app.services.user_services import get_user_by_username
 
 
-def get_current_user(request: Request, db: Session = Depends(get_db)):
+def get_current_user(request: Request, db: Session = Depends(get_db)) -> UserModel:
     username = request.state.username
     user = get_user_by_username(username, db)
     return user
